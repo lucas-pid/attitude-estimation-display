@@ -1,10 +1,13 @@
 clc; clear
-%% Load sensor data
-% temp = load('sens_data.mat');
-% sens = temp.sens;
 
 %% Initialize model parameters
 sim.sample_time_s = 1/100;
+
+% Load buses
+load_buses;
+
+% Load model configuration
+configuration_filter = filter_configuration();
 
 %% Initialize filter parameters
 
@@ -75,48 +78,5 @@ filt.rot_bias_idx = uint8(5:7);
 filt.acc_bias_idx = uint8(8:10);
 filt.rot_noise_idx = uint8(1:3);
 
+% Transform doubles to single
 filt            = double2single(filt);
-
-%% Auxiliar
-function [M_B_O, M_B_O_dphi, M_B_O_dtheta, M_B_O_dpsi] = get_M_B_O(phi, theta, psi)
-% Outputs linearization of the M_B_O rotation
-
-% Rotation matrices
-[Mx, My, Mz] = get_rot_matrix(phi, theta, psi);
-
-% Define M_B_O
-M_B_O = Mx*My*Mz;
-
-% Derivative of rotation matrices
-Mx_dphi = [0, 0, 0; 0, -sin(phi), cos(phi); 0, -cos(phi), -sin(phi)];
-My_dtheta = [-sin(theta), 0, -cos(theta); 0, 0, 0; cos(theta), 0, -sin(theta)];
-Mz_dpsi = [-sin(psi), cos(psi), 0; -cos(psi), -sin(psi), 0; 0, 0, 0];
-
-% Derivative of transformation
-M_B_O_dphi      = Mx_dphi * My        * Mz;
-M_B_O_dtheta    = Mx      * My_dtheta * Mz;
-M_B_O_dpsi      = Mx      * My        * Mz_dpsi;
-
-end
-
-function [Mx, My, Mz] = get_rot_matrix(phi, theta, psi)
-Mx = [1,0,0; 0, cos(phi), sin(phi); 0, -sin(phi), cos(phi)];
-My = [cos(theta), 0, -sin(theta); 0, 1, 0; sin(theta), 0, cos(theta)];
-Mz = [cos(psi), sin(psi), 0; -sin(psi), cos(psi), 0; 0, 0, 1];
-end
-
-function in_struct = double2single(in_struct)
-
-field_names = fieldnames(in_struct);
-
-for ii = 1:numel(field_names)
-
-
-    val = in_struct.(field_names{ii});
-
-    if isa(val, 'double')
-        in_struct.(field_names{ii}) = single(val);
-    end
-end
-
-end
