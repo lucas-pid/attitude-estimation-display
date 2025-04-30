@@ -2,3 +2,4 @@
 addpath('functions')
 addpath('simulink_lib')
 addpath('simulink_models')
+addpath('buses')
