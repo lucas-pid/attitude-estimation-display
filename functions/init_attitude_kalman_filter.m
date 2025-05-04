@@ -44,10 +44,10 @@ B_w     = [ eye(3),     zeros(3,6)                          % Euler
             zeros(3,3), zeros(3,3), eye(3)];    % Acc bias
 
 % Process covariance
-rot_var         = 9.1385e-3 * ones(3,1);
-acc_var         = 0.0096236 * ones(3,1);
-rot_bias_var    = 3.0462e-9 * ones(3,1);
-acc_bias_var    = 3.0462e-9 * ones(3,1);
+rot_var         = 9e-3 * ones(3,1);
+acc_var         = 9e-3 * ones(3,1);
+rot_bias_var    = 1e-8 * ones(3,1);
+acc_bias_var    = 1e-8 * ones(3,1);
 
 Q = diag([rot_var; rot_bias_var; acc_bias_var]);
 
@@ -60,7 +60,7 @@ filt.Phi        = expm(A * filt.sample_time_s);
 filt.Gamma_u    = B   * filt.sample_time_s;
 filt.Gamma_w    = B_w * filt.sample_time_s;
 filt.Q          = Q;
-filt.R          = diag(R);
+filt.R          = R;
 bias_gyro       = [0 0 0]';
 bias_acc        = [0 0 0]';
 g               = -9.81;
