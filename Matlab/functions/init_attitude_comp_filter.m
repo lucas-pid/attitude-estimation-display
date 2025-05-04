@@ -12,8 +12,6 @@ configuration_filter = filter_configuration();
 %% Define filter parameters
 filt.sample_time_s  = 1/100;
 filt.omega_radDs    = 1;        % Complementary filter frequency
-filt.rot_bias_radDs = [0;0;0];
-filt.sfor_bias_mDs2 = [0;0;0];
 
 % Filter states idx
 filt.eul_idx = uint8(1:3);
