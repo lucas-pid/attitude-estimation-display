@@ -16,7 +16,7 @@ configuration_filter = filter_configuration();
 % States:   Euler,              g,          rot_bias,       acc_bias,       linear_acceleration
 A = [       zeros(3,3),     zeros(3,1),     -eye(3,3),      zeros(3,3),         zeros(3,3)
             zeros(7,13)
-            zeros(3,10),                                                        -eye(3)*0.5    ];
+            zeros(3,10),                                                        -eye(3)*1    ];
 
 % B Matrix
 B = [   eye(3)
@@ -49,8 +49,8 @@ B_w     = [     eye(3),         zeros(3,9)                                      
 rot_var         = 9e-5 * ones(3,1);
 meas_acc_var    = 9e-3 * ones(3,1);
 lin_acc_var     = 9e-2 * ones(3,1);
-rot_bias_var    = 1e-8 * ones(3,1);
-acc_bias_var    = 1e-8 * ones(3,1);
+rot_bias_var    = 1e-6 * ones(3,1);
+acc_bias_var    = 1e-6 * ones(3,1) * 0;
 
 Q = diag([rot_var; rot_bias_var; acc_bias_var; lin_acc_var]);
 
@@ -82,5 +82,16 @@ filt.lin_acc_idx    = uint8(11:13);
 
 filt.rot_noise_idx  = uint8(1:3);
 
-% Transform doubles to single
+% Ground alignment parameters
+filt.align_lpf_freq_radDs               = 8;
+filt.align_euler_dot_threshold_radDs    = deg2rad(2);                                   % Change accordingly to low pass filter frequency
+filt.align_time_s                       = 2;                                            % Waits 2 seconds after detecting steadyness for settling of low pass filter
+filt.align_ticks_int                    = uint16(filt.align_time_s/filt.sample_time_s); % Number of iterations to get the align time
+
+%% Operating modes
+filt.modes.nominal          = uint8(0);
+filt.modes.dead_reckoning   = uint8(1);
+filt.modes.ground_alignment = uint8(2);
+
+%% Transform doubles to single
 filt            = double2single(filt);
