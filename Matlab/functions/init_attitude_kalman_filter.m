@@ -45,12 +45,16 @@ B_w     = [     eye(3),         zeros(3,9)                                      
                 zeros(3,3),     zeros(3,3),         eye(3),             zeros(3,3)              % Acc bias
                 zeros(3,9),                                             eye(3)];                % Linear acceleration
 
+% Zero psi_dot contribution
+B_w(3,3) = 0;
+B_w(7,6) = 0;
+
 % Process covariance
-rot_var         = 9e-5 * ones(3,1);
-meas_acc_var    = 9e-3 * ones(3,1);
-lin_acc_var     = 9e-2 * ones(3,1);
+rot_var         = (0.03 * pi/180)^2 * 100 * ones(3,1);
+meas_acc_var    = (0.22*1e-3 * 9.81)^2 * 100 * ones(3,1);
+lin_acc_var     = 9e-4 * ones(3,1);
 rot_bias_var    = 1e-6 * ones(3,1);
-acc_bias_var    = 1e-6 * ones(3,1) * 0;
+acc_bias_var    = 1e-6 * ones(3,1)*0;
 
 Q = diag([rot_var; rot_bias_var; acc_bias_var; lin_acc_var]);
 
@@ -84,7 +88,7 @@ filt.rot_noise_idx  = uint8(1:3);
 
 % Ground alignment parameters
 filt.align_lpf_freq_radDs               = 8;
-filt.align_euler_dot_threshold_radDs    = deg2rad(2);                                   % Change accordingly to low pass filter frequency
+filt.align_euler_dot_threshold_radDs    = deg2rad(5);                                   % Change accordingly to low pass filter frequency
 filt.align_time_s                       = 2;                                            % Waits 2 seconds after detecting steadyness for settling of low pass filter
 filt.align_ticks_int                    = uint16(filt.align_time_s/filt.sample_time_s); % Number of iterations to get the align time
 
