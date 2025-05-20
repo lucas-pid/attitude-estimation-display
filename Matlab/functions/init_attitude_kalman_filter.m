@@ -52,9 +52,9 @@ B_w(7,6) = 0;
 % Process covariance
 rot_var         = (0.03 * pi/180)^2 * 100 * ones(3,1);
 meas_acc_var    = (0.22*1e-3 * 9.81)^2 * 100 * ones(3,1);
-lin_acc_var     = 9e-4 * ones(3,1);
-rot_bias_var    = 1e-6 * ones(3,1);
-acc_bias_var    = 1e-6 * ones(3,1)*0;
+lin_acc_var     = 5e-2 * ones(3,1)*1;
+rot_bias_var    = 1e-10 * ones(3,1);
+acc_bias_var    = 1e-10 * ones(3,1)*1;
 
 Q = diag([rot_var; rot_bias_var; acc_bias_var; lin_acc_var]);
 
@@ -92,10 +92,15 @@ filt.align_euler_dot_threshold_radDs    = deg2rad(5);                           
 filt.align_time_s                       = 2;                                            % Waits 2 seconds after detecting steadyness for settling of low pass filter
 filt.align_ticks_int                    = uint16(filt.align_time_s/filt.sample_time_s); % Number of iterations to get the align time
 
+% Alignment time constant
+filt.allignment_tau_s = 1;
+
 %% Operating modes
 filt.modes.nominal          = uint8(0);
 filt.modes.dead_reckoning   = uint8(1);
 filt.modes.ground_alignment = uint8(2);
 
 %% Transform doubles to single
+init_attitude_comp_filter();
+
 filt            = double2single(filt);
