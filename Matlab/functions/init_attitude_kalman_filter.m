@@ -86,14 +86,8 @@ filt.lin_acc_idx    = uint8(11:13);
 
 filt.rot_noise_idx  = uint8(1:3);
 
-% Ground alignment parameters
-filt.align_lpf_freq_radDs               = 8;
-filt.align_euler_dot_threshold_radDs    = deg2rad(5);                                   % Change accordingly to low pass filter frequency
-filt.align_time_s                       = 2;                                            % Waits 2 seconds after detecting steadyness for settling of low pass filter
-filt.align_ticks_int                    = uint16(filt.align_time_s/filt.sample_time_s); % Number of iterations to get the align time
-
 % Alignment time constant
-filt.allignment_tau_s = 1;
+filt.alignment_tau_s = 1;
 
 %% Operating modes
 filt.modes.kalman_filter    = uint8(0);
