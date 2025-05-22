@@ -18,6 +18,13 @@ void ArtificialHorizon::update(float roll_angle , float pitch_angle, float psi_a
     drawHeadingIndicator(_canvas, psi_angle);
 }
 
+void ArtificialHorizon::add_text(char* message, int x, int y, uint16_t color, uint16_t bg_color, uint8_t text_datum) {
+    _canvas.setTextColor(color, bg_color);
+    _canvas.setTextDatum(text_datum);
+    _canvas.setTextSize(2); // Normal size
+    _canvas.drawString(message, x, y);
+}
+
 void ArtificialHorizon::draw() {
     _canvas.pushSprite(0, 0);
 }
@@ -62,6 +69,7 @@ void ArtificialHorizon::drawPitchScale(TFT_eSprite &sprite, float pitchAngle, ui
                 //uint16_t bgColor = (yPos < centerY - pitchAngle * pixelsPerDegree) ? TFT_BLUE : TFT_BROWN;
                 //sprite.setTextColor(color, bgColor);
                 sprite.setTextColor(color);
+                sprite.setTextSize(1); // Normal size
                 
                 // Draw labels at standard positions (±10° to ±30°)
                 if (abs(angle) <= 30) {
@@ -142,6 +150,7 @@ void ArtificialHorizon::drawBankAngleIndicator(TFT_eSprite &sprite, float bankAn
     String label = String(abs(angle));
     sprite.setTextDatum(MC_DATUM);
     sprite.setTextColor(color);
+    sprite.setTextSize(1); // Normal size
     sprite.drawString(label, 
       centerX + (radius - tickLength - 10) * sin(rad),
       centerY - (radius - tickLength - 10) * cos(rad),
@@ -172,7 +181,7 @@ void ArtificialHorizon::drawGround(TFT_eSprite &sprite, float pitchAngle, float 
   
     // Convert angles to radians
     float pitchRad = pitchAngle * DEG_TO_RAD;
-    float rollRad = rollAngle * DEG_TO_RAD;
+    float rollRad = -rollAngle * DEG_TO_RAD;
     
     // Horizon line slope
     float c_tanRoll = tan(-rollRad);
@@ -328,8 +337,11 @@ void ArtificialHorizon::drawHeadingIndicator(TFT_eSprite &sprite, float heading,
     // Draw baseline
     sprite.drawFastHLine(0, bottomY, sprite.width(), color);
     
+    // Normal text size
+    sprite.setTextSize(1);
+
     // Draw marks and labels
-    for (int angle = -120; angle < 360; angle += 10) {
+    for (int angle = -120; angle < 540; angle += 10) {
         // Calculate screen position (rotated by current heading)
         float relativeAngle = angle - heading;
         int xPos = centerX + (pixels_per_deg_heading * relativeAngle);

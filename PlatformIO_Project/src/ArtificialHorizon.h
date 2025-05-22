@@ -1,4 +1,8 @@
 #include <TFT_eSPI.h>
+#ifndef MAX_TEXT_LEN
+    //Default maximum text length
+    #define MAX_TEXT_LEN 10
+#endif
 
 class ArtificialHorizon {
 public:
@@ -10,6 +14,7 @@ public:
     
     // Main functions
     void update(float roll_angle , float pitch_angle, float psi_angle);
+    void add_text(char* message, int x, int y, uint16_t color = TFT_WHITE, uint16_t bg_color = TFT_BLACK, uint8_t text_datum = CL_DATUM);
     void draw();
     
     // Drawing functions
