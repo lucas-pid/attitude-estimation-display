@@ -96,9 +96,10 @@ filt.align_ticks_int                    = uint16(filt.align_time_s/filt.sample_t
 filt.allignment_tau_s = 1;
 
 %% Operating modes
-filt.modes.nominal          = uint8(0);
+filt.modes.kalman_filter    = uint8(0);
 filt.modes.dead_reckoning   = uint8(1);
-filt.modes.ground_alignment = uint8(2);
+filt.modes.comp_filter      = uint8(2);
+filt.modes.inclinometer     = uint8(3);
 
 %% Transform doubles to single
 init_attitude_comp_filter();

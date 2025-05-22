@@ -7,6 +7,8 @@ inp_bus_struct.stop_correction_bool         = false;
 inp_bus_struct.mode_idx                     = int8(0);
 inp_bus_struct.delta_x0                     = zeros(13,1,'single');
 inp_bus_struct.reset_bool                   = false;
+inp_bus_struct.allign_bool                  = false;
+inp_bus_struct.reset_allign_bool            = false;
 
 % Create bus
 inp_Bus = struct2bus(inp_bus_struct);
